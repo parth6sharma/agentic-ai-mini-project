@@ -1,0 +1,12 @@
+[project]
+name = "agentic-ai-mini-project"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.128.2",
+    "langchain-azure-ai>=1.0.0",
+    "langchain-core>=1.2.9",
+    "langgraph>=1.0.7",
+]
