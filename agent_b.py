@@ -9,6 +9,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# Weather summary thresholds
+TEMP_HOT_THRESHOLD = 80  # °F
+TEMP_COLD_THRESHOLD = 40  # °F
+WIND_SPEED_THRESHOLD = 15  # mph
+
 
 class AgentB:
     """Agent B performs specific tasks like fetching weather data."""
@@ -123,15 +128,15 @@ class AgentB:
             f"The humidity is {humidity}% and wind speed is {wind_speed} mph."
         )
         
-        # Add simple observations
-        if temp > 80:
+        # Add simple observations based on thresholds
+        if temp > TEMP_HOT_THRESHOLD:
             summary += " It's quite hot outside."
-        elif temp < 40:
+        elif temp < TEMP_COLD_THRESHOLD:
             summary += " It's quite cold outside."
         else:
             summary += " The temperature is comfortable."
             
-        if wind_speed > 15:
+        if wind_speed > WIND_SPEED_THRESHOLD:
             summary += " It's quite windy."
         
         return {
