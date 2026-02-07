@@ -34,11 +34,21 @@ class AgentA:
                 "response": "I'm sorry, I couldn't understand your request. Please try asking about weather in a city."
             }
         
-        # Step 2: Execute tasks through Agent B
+        # Step 2: Execute tasks through Agent B sequentially, passing data between tasks
         results = []
+        weather_data = None
+        
         for task in tasks:
+            # If this is a summarize task and we have weather data, pass it
+            if task["task_type"] == "summarize_weather" and weather_data:
+                task["parameters"]["weather_data"] = weather_data
+            
             result = await self.agent_b.execute_task(task)
             results.append(result)
+            
+            # Save weather data for next task if needed
+            if task["task_type"] == "get_weather" and result.get("success"):
+                weather_data = result.get("data")
         
         # Step 3: Compile final response
         final_response = self.compile_response(tasks, results)
@@ -142,17 +152,7 @@ class AgentA:
             if "note" in weather_data:
                 response += f"\n\nNote: {weather_data['note']}"
         elif len(results) >= 2:
-            # Weather data and summary
-            # Update second task parameters with first task results
-            if tasks[1]["task_type"] == "summarize_weather" and tasks[1]["parameters"]["weather_data"] is None:
-                tasks[1]["parameters"]["weather_data"] = results[0].get("data", {})
-                # Re-execute summary task with actual data
-                import asyncio
-                result = asyncio.get_event_loop().run_until_complete(
-                    self.agent_b.execute_task(tasks[1])
-                )
-                results[1] = result
-            
+            # Weather data and summary - use the summary
             summary_data = results[1].get("data", {})
             response = summary_data.get("summary", "No summary available")
         else:
