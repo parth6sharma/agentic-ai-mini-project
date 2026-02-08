@@ -9,4 +9,6 @@ dependencies = [
     "langchain-azure-ai>=1.0.0",
     "langchain-core>=1.2.9",
     "langgraph>=1.0.7",
+    "python-dotenv>=1.2.1",
+    "uvicorn>=0.40.0",
 ]
